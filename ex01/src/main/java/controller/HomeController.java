@@ -9,21 +9,21 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-// 서블릿 중복되면 안됨!!
+
 @WebServlet("/")
 public class HomeController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-   
-// 리퀘스트 디스패치로 dis변수 설정하고 home.jsp라는 주소를 요청하여 dis에 넣어주고 dis.foward로 실행
+
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setAttribute("pageName", "about.jsp");
 		RequestDispatcher dis=request.getRequestDispatcher("home.jsp");
 		dis.forward(request, response);
 	}
 
-	
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("/ dohost....");
+		System.out.println("/ doPost......");
 	}
 
 }
