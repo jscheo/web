@@ -29,11 +29,11 @@ public class LocalController extends HttpServlet {
 		switch(request.getServletPath()) {
 		case "/local/insert":
 			LocalVO vo=new LocalVO();
-			vo.setLid(request.getParameter("lid"));
-			vo.setLname(request.getParameter("lname"));
-			vo.setLaddress(request.getParameter("laddress"));
-			vo.setLphone(request.getParameter("lphone"));
-			vo.setLurl(request.getParameter("lurl"));
+			vo.setLid(request.getParameter("id"));
+			vo.setLname(request.getParameter("place_name"));
+			vo.setLaddress(request.getParameter("address_name"));
+			vo.setLphone(request.getParameter("phone"));
+			vo.setLurl(request.getParameter("place_url"));
 			vo.setX(request.getParameter("x"));
 			vo.setY(request.getParameter("y"));
 			dao.insert(vo);

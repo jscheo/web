@@ -78,10 +78,7 @@
 				$.ajax({
 					type:"post",
 					url:"/local/insert",
-					data:{
-						lid:data.id, lname:data.place_name,
-						laddress:data.address_name, lphone:data.phone,
-						lurl:data.place_url, x:data.x, y:data.y},
+					data: data,
 					success:function(){
 						
 					}
