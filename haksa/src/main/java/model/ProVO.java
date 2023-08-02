@@ -1,15 +1,15 @@
 package model;
 
-import java.util.*;
 
 public class ProVO {
 	private String pcode;
 	private String pname;
 	private String dept;
-	private Date hiredate;
+	private String hiredate;
 	private String title;
 	private int salary;
-	
+
+
 	public String getPcode() {
 		return pcode;
 	}
@@ -28,30 +28,53 @@ public class ProVO {
 	public void setDept(String dept) {
 		this.dept = dept;
 	}
-	public Date getHiredate() {
+
+
+
+	public String getHiredate() {
 		return hiredate;
 	}
-	public void setHiredate(Date hiredate) {
+
+
+
+	public void setHiredate(String hiredate) {
 		this.hiredate = hiredate;
 	}
+
+
+
 	public String getTitle() {
 		return title;
 	}
+
+
+
 	public void setTitle(String title) {
 		this.title = title;
 	}
+
+
+
 	public int getSalary() {
 		return salary;
 	}
+
+
+
 	public void setSalary(int salary) {
 		this.salary = salary;
 	}
+
+
+
 	@Override
 	public String toString() {
 		return "ProVO [pcode=" + pcode + ", pname=" + pname + ", dept=" + dept + ", hiredate=" + hiredate + ", title="
 				+ title + ", salary=" + salary + "]";
 	}
-	
-	
-	
+
+
+
+
+
 }

@@ -5,7 +5,7 @@
 		<h1 class="text-center">교수목록</h1>
 		<div class="row">
 			<form class="col-6" name="frm">
-				<div class="input-group">
+				<div class="input-group mt-5">
 					<select class="form-select" name="key">
 						<option value="pcode">교수번호</option>
 						<option value="pname" selected>교수이름</option>
@@ -16,19 +16,39 @@
 					<input type="submit" value="검색" class="btn btn-warning">
 				</div>
 			</form>
+			<div class="col text-end mt-5">
+				<button class="btn btn-dark" id="btn-insert">교수등록</button>
+			</div>
 		</div>
 		<hr>
 		<div id="div_pro"></div>
 		<div id="pagination" class="pagination justify-content-center"></div>
 	</div>
 </div>
+<!-- 교수등록Modal -->
+	<div class="modal fade" id="insert" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h1 class="modal-title fs-5" id="staticBackdropLabel">교수등록</h1>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body">
+	        <jsp:include page="/pro/insert.jsp"/>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
 <!-- 템플릿 -->
 <script id="temp_pro" type="text/x-handlebars-template">
 	<table class="table">
 		{{#each .}}
 			<tr>
 				<td>{{pcode}}</td>
-				<td>{{pname}}</td>
+				<td><a href="/pro/update?pcode={{pcode}}">{{pname}}</a></td>
 				<td>{{dept}}</td>
 				<td>{{hiredate}}</td>
 				<td>{{title}}</td>
@@ -42,6 +62,10 @@
 	//getList(1);
 	let query="";
 	let key=$(frm.key).val();
+	
+	$("#btn-insert").on("click", function(){
+		$("#insert").modal("show");
+	});
 	
 	getTotal();
 	$(frm).on("submit", function(e){

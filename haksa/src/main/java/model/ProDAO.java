@@ -4,6 +4,69 @@ import java.util.*;
 import java.sql.*;
 
 public class ProDAO {
+	//교수정보수정
+	public void update(ProVO vo) {
+		try {
+			String 	sql="update professors set pname=?, dept=?, title=?, salary=?, hiredate=? ";
+					sql+=" where pcode=?";
+			PreparedStatement ps=Database.CON.prepareStatement(sql);
+			ps.setString(1, vo.getPname());
+			ps.setString(2, vo.getDept());
+			ps.setString(3, vo.getTitle());
+			ps.setInt(4, vo.getSalary());
+			ps.setString(5, vo.getHiredate());
+			ps.setString(6, vo.getPcode());
+			ps.execute();
+		}catch(Exception e) {
+			System.out.println("교수정보수정:" + e.toString());
+		}
+	}
+	//교수정보읽기
+	public ProVO read(String pcode) {
+		ProVO vo =new ProVO();
+		try {
+			String 	sql ="select * from professors";
+					sql+=" where pcode=?";
+			PreparedStatement ps=Database.CON.prepareStatement(sql);
+			ps.setString(1, pcode);
+			ResultSet rs=ps.executeQuery();
+			while(rs.next()) {
+				vo.setPcode(rs.getString("pcode"));
+				vo.setPname(rs.getString("pname"));
+				vo.setDept(rs.getString("dept"));
+				vo.setHiredate(rs.getString("hiredate"));
+				vo.setTitle(rs.getString("title"));
+				vo.setSalary(rs.getInt("salary"));
+			}
+		}catch(Exception e) {
+			System.out.println("교수정보:" + e.toString());
+		}
+		return vo;
+	}
+	//교수 등록
+	public void insert(ProVO vo) {
+		try {
+			int ncode=0;
+			String sql="select max(pcode)+1 ncode from professors";
+			PreparedStatement ps=Database.CON.prepareStatement(sql);
+			ResultSet rs=ps.executeQuery();
+			if(rs.next()) {
+				ncode=rs.getInt("ncode");
+			}
+			sql="insert into professors(pcode,pname,dept,title,salary,hiredate) ";
+			sql+=" values(?,?,?,?,?,?)";
+			ps=Database.CON.prepareStatement(sql);
+			ps.setInt(1, ncode);
+			ps.setString(2, vo.getPname());
+			ps.setString(3, vo.getDept());
+			ps.setString(4, vo.getTitle());
+			ps.setInt(5, vo.getSalary());
+			ps.setString(6, vo.getHiredate());
+			ps.execute();
+		}catch(Exception e) {
+			System.out.println("교수등록:" + e.toString());
+		}
+	}
 	//교수 총수
 	public int total(String query, String key) {
 		int total=0;
@@ -38,7 +101,7 @@ public class ProDAO {
 				vo.setPcode(rs.getString("pcode"));
 				vo.setPname(rs.getString("pname"));
 				vo.setDept(rs.getString("dept"));
-				vo.setHiredate(rs.getDate("hiredate"));
+				vo.setHiredate(rs.getString("hiredate"));
 				vo.setTitle(rs.getString("title"));
 				vo.setSalary(rs.getInt("salary"));
 				array.add(vo);

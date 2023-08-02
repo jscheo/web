@@ -5,7 +5,7 @@
 		<h1 class="text-center">학생목록</h1>
 		<div class="row">
 			<form class="col-6" name="frm">
-				<div class="input-group">
+				<div class="input-group mt-5">
 					<select class="form-select" name="key">
 						<option value="scode">학생번호</option>
 						<option value="sname" selected>학생이름</option>
