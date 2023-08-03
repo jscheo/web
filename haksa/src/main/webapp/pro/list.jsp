@@ -86,12 +86,13 @@
 				const totalPages=Math.ceil(data/5);
 				if(totalPages==0){
 					alert("검색 내용이 없습니다.")
-					$("#pagination").hide();
-					$("#div_pro").hide();
+					$(frm.query).val();
+					query="";
+					getTotal();
 				}else{
-					$("#pagination").show();
+					
 					$("#pagination").twbsPagination("changeTotalPages", totalPages, 1);
-					$("#div_pro").show();
+					
 				}
 			}
 		})

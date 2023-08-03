@@ -6,6 +6,67 @@ import java.util.*;
 import javax.naming.spi.DirStateFactory.Result;
 
 public class StuDAO {
+	//학생 수정
+	public void update(StuVO vo) {
+		try {
+			String sql="update students set sname=?, dept=?, year=?, birthday=?, advisor=? where scode=?";
+			PreparedStatement ps=Database.CON.prepareStatement(sql);
+			ps.setString(1, vo.getSname());
+			ps.setString(2, vo.getDept());
+			ps.setInt(3, vo.getYear());
+			ps.setString(4, vo.getBirthday());
+			ps.setString(5, vo.getAdvisor());
+			ps.setString(6, vo.getScode());
+			ps.execute();
+		}catch(Exception e) {
+			System.out.println("학생수정:" + e.toString());
+		}
+	}
+	//학생 정보읽기
+	public StuVO read(String scode) {
+		StuVO vo=new StuVO();
+		try {
+			String sql= " select * from view_stu where scode=?";
+			PreparedStatement ps = Database.CON.prepareStatement(sql);
+			ps.setString(1, scode);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				vo.setScode(rs.getString("scode"));
+				vo.setSname(rs.getString("sname"));
+				vo.setDept(rs.getString("dept"));
+				vo.setYear(rs.getInt("year"));
+				vo.setBirthday(rs.getString("birthday"));
+				vo.setAdvisor(rs.getString("advisor"));
+				vo.setPname(rs.getString("pname"));
+			}
+		}catch(Exception e) {
+			System.out.println("학생정보" + e.toString());
+		}
+		return vo;
+				
+	}
+	//학생 등록
+	public void insert(StuVO vo) {
+		try {
+			String ncode="";
+			String sql="select max(scode)+1 ncode from students";
+			PreparedStatement ps=Database.CON.prepareStatement(sql);
+			ResultSet rs=ps.executeQuery();
+			if(rs.next()) ncode=rs.getString("ncode");
+			sql="insert into students(scode,sname,dept,year,birthday,advisor) values(?,?,?,?,?,?)";
+			ps=Database.CON.prepareStatement(sql);
+			ps.setString(1, ncode);
+			ps.setString(2, vo.getSname());
+			ps.setString(3, vo.getDept());
+			ps.setInt(4, vo.getYear());
+			ps.setString(5, vo.getBirthday());
+			ps.setString(6, vo.getAdvisor());
+			ps.execute();
+		}catch(Exception e) {
+			System.out.println("학생등록:" + e.toString());
+		}
+	}
+	
 	//학생 검색수
 	public int total(String query, String key) {
 		int total=0;
@@ -40,7 +101,7 @@ public class StuDAO {
 				vo.setSname(rs.getString("sname"));
 				vo.setDept(rs.getString("dept"));
 				vo.setYear(rs.getInt("year"));
-				vo.setBirthday(rs.getDate("birthday"));
+				vo.setBirthday(rs.getString("birthday"));
 				vo.setAdvisor(rs.getString("advisor"));
 				vo.setPname(rs.getString("pname"));
 				array.add(vo);

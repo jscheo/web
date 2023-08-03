@@ -14,15 +14,16 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import model.ProDAO;
 import model.StuDAO;
 import model.StuVO;
 
 
-@WebServlet(value={"/stu/list", "/stu/list.json", "/stu/total"})
+@WebServlet(value={"/stu/list", "/stu/list.json", "/stu/total", "/stu/insert", "/stu/update"})
 public class StudentsController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	StuDAO dao= new StuDAO();
-  
+	ProDAO pdao=new ProDAO();
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF-8");
 		PrintWriter out=response.getWriter();
@@ -30,6 +31,7 @@ public class StudentsController extends HttpServlet {
 		
 		switch(request.getServletPath()) {
 		case "/stu/list":
+			request.setAttribute("parray", pdao.all());
 			request.setAttribute("pageName", "/stu/list.jsp");
 			dis.forward(request, response);
 			break;
@@ -57,11 +59,43 @@ public class StudentsController extends HttpServlet {
 			key=request.getParameter("key");
 			out.print(dao.total(query, key));
 			break;
+		case "/stu/update":
+			request.setAttribute("vo", dao.read(request.getParameter("scode")));
+			request.setAttribute("parray", pdao.all());
+			request.setAttribute("pageName", "/stu/update.jsp");
+			dis.forward(request, response);
+			break;
 		}
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setCharacterEncoding("UTF-8");
 		
+		switch(request.getServletPath()) {
+		case "/stu/insert":
+			StuVO vo = new StuVO();
+			vo.setSname(request.getParameter("sname"));
+			vo.setDept(request.getParameter("dept"));
+			vo.setBirthday(request.getParameter("birthday"));
+			vo.setYear(Integer.parseInt(request.getParameter("year")));
+			vo.setAdvisor(request.getParameter("advisor"));
+			System.out.println(vo.toString());
+			dao.insert(vo);
+			response.sendRedirect("/stu/list");
+			break;
+		case "/stu/update":
+			vo = new StuVO();
+			vo.setScode(request.getParameter("scode"));
+			vo.setSname(request.getParameter("sname"));
+			vo.setDept(request.getParameter("dept"));
+			vo.setBirthday(request.getParameter("birthday"));
+			vo.setYear(Integer.parseInt(request.getParameter("year")));
+			vo.setAdvisor(request.getParameter("advisor"));
+			System.out.println(vo.toString());
+			dao.update(vo);
+			response.sendRedirect("/stu/list");
+			break;
+		}
 	}
 
 }

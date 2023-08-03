@@ -18,17 +18,37 @@
 					<input type="submit" value="검색" class="btn btn-warning">
 				</div>
 			</form>
+			<div class="col text-end mt-5">
+				<button class="btn btn-dark" id="btn-insert">학생등록</button>
+			</div>
 		</div>
 		<hr>
 		<div id="div_stu"></div>
 		<div id="pagination" class="pagination justify-content-center"></div>
 	</div>
 </div>
+<!-- 학생등록Modal -->
+	<div class="modal fade" id="modal-insert" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h1 class="modal-title fs-5" id="staticBackdropLabel">학생등록</h1>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body">
+	        <jsp:include page="insert.jsp"/>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
 <!-- 템플릿 -->
 <script id="temp_stu" type="text/x-handlebars-template">
 	<table class="table">
 		{{#each .}}
-			<tr>
+			<tr class="stu" style="cursor:pointer;" scode="{{scode}}">
 				<td>{{scode}}</td>
 				<td>{{sname}}</td>
 				<td>{{dept}}</td>
@@ -44,6 +64,14 @@
 	let query="";
 	let key=$(frm.key).val();
 	
+	$("#div_stu").on("click", ".stu", function(){
+		const scode=$(this).attr("scode");
+		location.href="/stu/update?scode=" + scode;
+	});
+	
+	$("#btn-insert").on("click", function(){
+		$("#modal-insert").modal("show");
+	});
 	getTotal();
 	$(frm).on("submit", function(e){
 		e.preventDefault();
@@ -63,12 +91,13 @@
 				const totalPages=Math.ceil(data/5);
 				if(totalPages==0){
 					alert("검색 내용이 없습니다.")
-					$("#pagination").hide();
-					$("#div_stu").hide();
+					$(frm.query).val();
+					query="";
+					getTotal();
 				}else{
-					$("#pagination").show();
+					
 					$("#pagination").twbsPagination("changeTotalPages", totalPages, 1);
-					$("#div_stu").show();
+					
 				}
 			}
 		})

@@ -111,4 +111,26 @@ public class ProDAO {
 		}
 		return array;
 	}
+	//교수 모든 목록
+	public ArrayList<ProVO> all(){
+		ArrayList<ProVO> array=new ArrayList<ProVO>();
+		try {
+			String 	sql ="select * from professors order by pname asc";
+			PreparedStatement ps=Database.CON.prepareStatement(sql);
+			ResultSet rs=ps.executeQuery();
+			while(rs.next()) {
+				ProVO vo=new ProVO();
+				vo.setPcode(rs.getString("pcode"));
+				vo.setPname(rs.getString("pname"));
+				vo.setDept(rs.getString("dept"));
+				vo.setHiredate(rs.getString("hiredate"));
+				vo.setTitle(rs.getString("title"));
+				vo.setSalary(rs.getInt("salary"));
+				array.add(vo);
+			}
+		}catch(Exception e) {
+			System.out.println("교수모든목록:" + e.toString());
+		}
+		return array;
+	}
 }

@@ -15,11 +15,11 @@ import com.google.gson.Gson;
 import java.util.*;
 import model.*;
 
-@WebServlet(value={"/cou/list", "/cou/total", "/cou/list.json"})
+@WebServlet(value={"/cou/list", "/cou/total", "/cou/list.json", "/cou/insert", "/cou/update"})
 public class CoursesController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     CouDAO dao = new CouDAO();   
-  
+    ProDAO pdao = new ProDAO();
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF-8");
 		PrintWriter out=response.getWriter();
@@ -27,6 +27,7 @@ public class CoursesController extends HttpServlet {
 		
 		switch(request.getServletPath()) {
 		case "/cou/list":
+			request.setAttribute("parray", pdao.all());
 			request.setAttribute("pageName", "/cou/list.jsp");
 			dis.forward(request, response);
 			break;
@@ -42,12 +43,45 @@ public class CoursesController extends HttpServlet {
 			Gson gson=new Gson();
 			out.println(gson.toJson(dao.list(page, key, query)));
 			break;
+		case "/cou/update":
+			request.setAttribute("vo", dao.read(request.getParameter("lcode")));
+			request.setAttribute("parray", pdao.all());
+			request.setAttribute("pageName", "/cou/update.jsp");
+			dis.forward(request, response);
+			break;
 		}
 	}
 
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+		request.setCharacterEncoding("UTF-8");
+		switch(request.getServletPath()) {
+		case "/cou/insert":
+			CourseVO vo=new CourseVO();
+			vo.setLname(request.getParameter("lname"));
+			vo.setRoom(request.getParameter("room"));
+			vo.setHours(Integer.parseInt(request.getParameter("hours")));
+			vo.setCapacity(Integer.parseInt(request.getParameter("capacity")));
+			vo.setPersons(Integer.parseInt(request.getParameter("persons")));
+			vo.setInstructor(request.getParameter("instructor"));
+			System.out.println(vo.toString());
+			dao.insert(vo);
+			response.sendRedirect("/cou/list");
+			break;
+		case "/cou/update":
+			vo =new CourseVO();
+			vo.setLcode(request.getParameter("lcode"));
+			vo.setLname(request.getParameter("lname"));
+			vo.setRoom(request.getParameter("room"));
+			vo.setHours(Integer.parseInt(request.getParameter("hours")));
+			vo.setCapacity(Integer.parseInt(request.getParameter("capacity")));
+			vo.setPersons(Integer.parseInt(request.getParameter("persons")));
+			vo.setInstructor(request.getParameter("instructor"));
+			System.out.println(vo.toString());
+			dao.update(vo);
+			response.sendRedirect("/cou/list");
+			break;
+		}
 	}
 
 }

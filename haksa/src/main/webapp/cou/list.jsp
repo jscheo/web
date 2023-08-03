@@ -1,5 +1,12 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<style>
+	.cou{
+		cursor:pointer;
+	}
+	.cou:hover{
+		color:green;
+	}
+</style>
 <div class="row my-5">
 	<div class="col">
 		<h1 class="text-center mb-5">강좌목록</h1>
@@ -17,12 +24,29 @@
 				</div>	
 			
 			</form>
+			<div class="col text-end">
+				<button class="btn btn-dark" id="btn-insert">강좌등록</button>
+			</div>
 		</div>
 		<hr>
 		<div id="div_cou"></div>
 		<div id="pagination" class="pagination justify-content-center mt-3"></div>
 	</div>
 </div>
+<!-- Modal -->
+	<div class="modal fade" id="modal-insert" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h1 class="modal-title fs-5" id="staticBackdropLabel">강좌등록</h1>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body">
+	      	<jsp:include page="insert.jsp"/>
+	      </div>
+	    </div>
+	  </div>
+	</div>
 <!-- 템플릿 -->
 <script id="temp_cou" type="text/x-handlebars-template">
 	<table class="table">
@@ -36,8 +60,8 @@
 			<th>담당교수</th>
 		</tr>
 		{{#each .}}
-			<tr>
-				<td>{{lcode}}</td>
+			<tr class="cou" lcode="{{lcode}}">
+				<td class="lcode">{{lcode}}</td>
 				<td>{{lname}}</td>
 				<td>{{room}}</td>
 				<td>{{hours}}</td>
@@ -53,6 +77,17 @@
 	
 	let key=$(frm.key).val();
 	let query=$(frm.query).val();
+	
+	$("#div_cou").on("click", ".cou", function(){
+		//const lcode=$(this).find(".lcode").text();
+		const lcode=$(this).attr("lcode");
+		//자바에서 이동하고 싶을 때 사용하는 문법 가려는 페이지에 가져갈 데이터값은 ? 뒤에 작성해준다.
+		location.href="/cou/update?lcode=" + lcode;
+	});
+	
+	$("#btn-insert").on("click", function(){
+		$("#modal-insert").modal("show");
+	});
 	
 	$(frm).on("submit", function(e){
 		e.preventDefault();
@@ -70,13 +105,14 @@
 			success:function(data){
 				const totalPages=Math.ceil(data/5);
 				if(totalPages==0){
-					alert("검색결과가 없습니다.")
-					$("#pagination").hide();
-					$("#div_cou").hide();
+					alert("검색 내용이 없습니다.")
+					$(frm.query).val();
+					query="";
+					getTotal();
 				}else{
-					$("#pagination").show();
+					
 					$("#pagination").twbsPagination("changeTotalPages", totalPages, 1);
-					$("#div_cou").show();
+					
 				}
 			}
 		});
