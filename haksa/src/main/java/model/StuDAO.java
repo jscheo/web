@@ -6,6 +6,60 @@ import java.util.*;
 import javax.naming.spi.DirStateFactory.Result;
 
 public class StuDAO {
+	//수강신청등록
+	public int insert (String lcode, String scode) {
+		int result= 0;
+		try {
+			String sql="select * from enrollments where scode=? and lcode=?";
+			PreparedStatement ps= Database.CON.prepareStatement(sql);
+			ps.setString(1, scode);
+			ps.setString(2, lcode);
+			ResultSet rs= ps.executeQuery();
+			if(!rs.next()) {
+				sql="insert into enrollments(scode,lcode) values(?,?)";
+				ps=Database.CON.prepareStatement(sql);
+				ps.setString(1, scode);
+				ps.setString(2, lcode);
+				ps.execute();
+				
+				sql="update courses set persons=persons+1 where lcode=?";
+				ps=Database.CON.prepareStatement(sql);
+				ps.setString(1, lcode);
+				ps.execute();
+				result=1;
+			}
+		}catch(Exception e) {
+			System.out.println("수강신청등록:" + e.toString());
+		}
+		return result;
+	}
+	//수강신청목록
+	public ArrayList<EnrollVO> list(String scode){
+		 ArrayList<EnrollVO> array = new ArrayList<EnrollVO>();
+		try {
+			String sql="select * from view_enroll_cou where scode=?";
+			PreparedStatement ps = Database.CON.prepareStatement(sql);
+			ps.setString(1, scode);
+			ResultSet rs=ps.executeQuery();
+			while(rs.next()) {
+				EnrollVO vo = new EnrollVO();
+				vo.setLcode(rs.getString("lcode"));
+				vo.setLname(rs.getString("lname"));
+				vo.setEdate(rs.getString("edate"));
+				vo.setGrade(rs.getInt("grade"));
+				vo.setCapacity(rs.getInt("capacity"));
+				vo.setPersons(rs.getInt("persons"));
+				vo.setRoom(rs.getString("room"));
+				vo.setHours(rs.getInt("hours"));
+				vo.setPname(rs.getString("pname"));
+				array.add(vo);
+			}
+			
+		}catch(Exception e) {
+			System.out.println("수강신청목록:" +e.toString());
+		}
+		return array;
+	}
 	//학생 수정
 	public void update(StuVO vo) {
 		try {

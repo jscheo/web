@@ -48,13 +48,17 @@
 <script id="temp_stu" type="text/x-handlebars-template">
 	<table class="table">
 		{{#each .}}
-			<tr class="stu" style="cursor:pointer;" scode="{{scode}}">
+			<tr>
 				<td>{{scode}}</td>
-				<td>{{sname}}</td>
+				<td><a href="/stu/update?scode={{scode}}">{{sname}}</a></td>
 				<td>{{dept}}</td>
 				<td>{{pname}}{{advisor}}</td>
 				<td>{{year}}</td>
 				<td>{{birthday}}</td>
+				<td class="text-end">
+					<a href="/stu/enroll?scode={{scode}}">
+						<button class="btn btn-dark btn-sm">수강신청</button>
+					</a>
 			</tr>
 		{{/each}}
 	</table>

@@ -94,6 +94,30 @@ public class CouDAO {
 		}
 		return total;
 	}
+	//강좌전체목록
+	public ArrayList<CourseVO> all() {
+		ArrayList<CourseVO> array = new ArrayList();
+		try {
+			String 	sql="select * from view_cou order by lname";
+			PreparedStatement ps = Database.CON.prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				CourseVO vo= new CourseVO();
+				vo.setLcode(rs.getString("lcode"));
+				vo.setLname(rs.getString("lname"));
+				vo.setHours(rs.getInt("hours"));
+				vo.setRoom(rs.getString("room"));
+				vo.setInstructor(rs.getString("instructor"));
+				vo.setCapacity(rs.getInt("capacity"));
+				vo.setPersons(rs.getInt("persons"));
+				vo.setPname(rs.getString("pname"));
+				array.add(vo);
+			}
+		}catch(Exception e) {
+			System.out.println("강좌목록:" + e.toString());
+		}
+		return array;
+	}
 	//강좌목록
 	public ArrayList<CourseVO> list(int page, String key, String query){
 		ArrayList<CourseVO> array = new ArrayList();
