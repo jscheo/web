@@ -9,6 +9,42 @@ import java.text.SimpleDateFormat;
 
 public class GoodsDAO {
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	//상품정보수정
+	public void update(GoodsVO vo) {
+		try {
+			String sql="update goods set title=?, price=?, maker=?, image=? where gid=?";
+			PreparedStatement ps =Database.CON.prepareStatement(sql);
+			ps.setString(1, vo.getTitle());
+			ps.setInt(2, vo.getPrice());
+			ps.setString(3, vo.getMaker());
+			ps.setString(4, vo.getImage());
+			ps.setString(5, vo.getGid());
+			ps.execute();
+		}catch(Exception e){
+			System.out.println("상품수정:" +e.toString());
+		}
+	}
+	//상품정보읽기
+	public GoodsVO read(String gid) {
+		GoodsVO vo = new GoodsVO();
+		try {
+			String sql="select * from goods where gid=?";
+			PreparedStatement ps = Database.CON.prepareStatement(sql);
+			ps.setString(1, gid);
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()) {
+				vo.setGid(rs.getString("gid"));
+				vo.setTitle(rs.getString("title"));
+				vo.setMaker(rs.getString("maker"));
+				vo.setPrice(rs.getInt("price"));
+				vo.setImage(rs.getString("image"));
+				vo.setRegDate(sdf.format(rs.getTimestamp("regDate")));
+			}
+		}catch(Exception e) {
+			System.out.println("상품정보:" +e.toString());
+		}
+		return vo;
+	}
 	//상품삭제
 	public void delete(String gid) {
 		try {

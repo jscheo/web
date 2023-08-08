@@ -26,7 +26,7 @@
 	{{#each .}}
 		<div class="col-6 col-md-4 col-lg-2 mb-3">
 			<div class="card p-3">
-				<img src="{{image}}">
+				<img src="{{image}}" gid="{{gid}}" style="cursor:pointer;">
 				<div class="ellipsis title mt-2">{{title}}</div>
 				<div class="price">{{fmtPrice price}}</div>
 			</div>
@@ -41,6 +41,11 @@
 <script>
 	let page=1;
 	let query="";
+	
+	$("#div_goods").on("click", "img", function(){
+		const gid=$(this).attr("gid");
+		location.href="/goods/read?gid=" +gid;
+	});
 	
 	getTotal();
 	function getTotal(){

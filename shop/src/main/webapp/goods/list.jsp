@@ -2,7 +2,12 @@
 <div class="row my-5">
 	<div class="col">
 		<h1 class="text-center">상품목록</h1>
-		<div class="row">
+		<div class="row justify-content-end">
+			<div class="col">
+				<a href="/goods/insert">
+					<button class="btn btn-dark">상품등록</button>
+				</a>
+			</div>
 			<form name="frm" class="col-4">
 				<div class="input-group mb-3">
 					<input name="query" class="form-control" value="">
@@ -20,7 +25,7 @@
 	<table class="table">
 	{{#each .}}
 		<tr>
-			<td class="gid">{{gid}}</td>
+			<td class="gid"><a href="/goods/update?gid={{gid}}">{{gid}}</a></td>
 			<td><img class="image" src="{{image}}" width="50px"></td>
 			<td><div class= "title ellipsis">{{title}}</div></td>
 			<td>{{fmtPrice price}}</td>
