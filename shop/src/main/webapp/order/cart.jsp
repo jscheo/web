@@ -3,14 +3,28 @@
 	<div class="col">
 		<h1 class="my-5 text-center">장바구니</h1>
 		<div id = "div_cart"></div>
+		<div class ="text-center mt-3">
+			<button class="btn btn-dark id="btn-order">주문하기</button>
+		</div>
 	</div>
 </div>
 <!-- 카트목록 템플릿 -->
 
 <script id = "temp_cart" type="text/x-handlebars-template">
 	<table class="table">
+		<tr>
+			<th><input type="checkbox" id="all"></th>
+			<th>상품코드</th>
+			<th>상품사진</th>
+			<th>상품이름</th>
+			<th>상품가격</th>
+			<th>상품수량</th>
+			<th>상품금액</th>
+			<th>삭제</th>
+		</tr>
 		{{#each .}}	
 			<tr class="tr" price="{{price}}">
+				<td><input type="checkbox" class="chk"></td>
 				<td class="gid">{{gid}}</td>
 				<td><img src = "{{image}}" width="50px"></td>
 				<td>{{title}}</td>
@@ -37,6 +51,30 @@
 <script>
 
 	getList();
+	
+	//전체선택 체크박스를 클릭한 경우
+	$("#div_cart").on("click", "#all", function(){
+		if($(this).is(":checked")){
+			$("#div_cart .chk").each(function(){
+				$(this).prop("checked", true)
+			});
+		}else{
+			$("#div_cart .chk").each(function(){
+				$(this).prop("checked", false)
+			});
+		}
+	});
+	
+	//각행의 체크박스를 클릭한 경우
+	$("#div_cart").on("click", ".chk", function(){
+		const all = $("#div_cart .chk").length;
+		const chk = $("#div_cart .chk:checked").length;
+		if(all==chk){
+			$("#div_cart #all").prop("checked", true);
+		}else{
+			$("#div_cart #all").prop("checked", false);
+		}
+	});
 	
 	function isNumber(item){
 		item.value = item.value.replace(/[^0-9]/g, '');
