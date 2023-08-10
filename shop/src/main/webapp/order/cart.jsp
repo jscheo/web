@@ -1,14 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<div class="row my-5">
+<div class="row my-5" id="page_cart">
 	<div class="col">
 		<h1 class="my-5 text-center">장바구니</h1>
 		<div id = "div_cart"></div>
-		<div class ="text-center mt-3">
-			<button class="btn btn-dark id="btn-order">주문하기</button>
-		</div>
 	</div>
 </div>
-<!-- 카트목록 템플릿 -->
+<jsp:include page="order.jsp"/>
+<!-- 카트목록 템플릿(컴파일 할 때만 사용가능함 -->
 
 <script id = "temp_cart" type="text/x-handlebars-template">
 	<table class="table">
@@ -24,14 +22,14 @@
 		</tr>
 		{{#each .}}	
 			<tr class="tr" price="{{price}}">
-				<td><input type="checkbox" class="chk"></td>
+				<td><input type="checkbox" class="chk" goods="{{toString @this}}"></td>
 				<td class="gid">{{gid}}</td>
 				<td><img src = "{{image}}" width="50px"></td>
 				<td>{{title}}</td>
 				<td>{{sum price 1}}</td>
 				<td>
 					<input class="qnt" value="{{qnt}}" size=5 oninput="isNumber(this)">
-					<button class="btn btn-primary btn-sm">수정</button>
+					<button class="btn btn-dark btn-update">수정</button>
 				</td>
 				<td>{{sum price qnt}}</td>
 				<td><button class="btn btn-danger btn-sm" gid = "{{gid}}">삭제</button></td>
@@ -41,16 +39,46 @@
 			<td colspan="7" class="text-end">총합:<span id="sum">0원</span></td>
 		</tr>
 	</table>
+	<div class ="text-center mt-3">
+			<button class="btn btn-dark" id="btn-order">주문하기</button>
+	</div>
 </script>
 <script>
 	Handlebars.registerHelper("sum", function(price, qnt){
 		const sum=price*qnt;
 		return sum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "원";
 	});
+	
+	Handlebars.registerHelper("toString", function(goods){
+		return JSON.stringify(goods); //object를 string 으로 바꿔주는 것
+	});
 </script>
 <script>
 
 	getList();
+	const uid="${user.uid}";
+	
+	//주문하기 버튼을 누른경우
+	$("#div_cart").on("click", "#btn-order", function(){
+		if(uid==""){//로그인이 된경우
+			location.href="/user/login?target=/cart/list";
+		}else{//안된경우
+			const chk=$("#div_cart .chk:checked").length;
+			if(chk==0){
+				alert("주문할 상품을 추가하세요")
+			}else{
+				let data=[];
+				$("#div_cart .chk:checked").each(function(){
+					const goods=$(this).attr("goods");
+					data.push(JSON.parse(goods));
+				});
+				console.log(data);
+				getOrder(data);
+				$("#page_order").show();
+				$("#page_cart").hide();
+			}
+		}
+	});
 	
 	//전체선택 체크박스를 클릭한 경우
 	$("#div_cart").on("click", "#all", function(){
@@ -80,8 +108,8 @@
 		item.value = item.value.replace(/[^0-9]/g, '');
 	}
 
-
-	$("#div_cart").on("click", ".btn-primary", function(){
+	//각행의 수량 수정버튼 클릭한 경우
+	$("#div_cart").on("click", ".btn-update", function(){
 		const row=$(this).parent().parent();
 		const gid = row.find(".gid").text();
 		const qnt = row.find(".qnt").val();
@@ -119,10 +147,15 @@
 			url:"/cart/list.json",
 			dataType:"json",
 			success:function(data){
-				const temp = Handlebars.compile($("#temp_cart").html());
-				const html = temp(data);
-				$("#div_cart").html(html);
-				getSum();
+				if(data.length==0){
+					$("#div_cart").html("<h3 class='text-center'>장바구니가 비어있습니다.</h3>");
+				}else{
+					const temp = Handlebars.compile($("#temp_cart").html());
+					const html = temp(data);
+					$("#div_cart").html(html);
+					getSum();
+				}
+				
 			}
 			
 		})		

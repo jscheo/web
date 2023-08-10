@@ -14,6 +14,8 @@
 </div>
 
 <script>
+	const target ="${target}";
+	
 	$(frm).on("submit", function(e){
 		e.preventDefault();
 		const uid=$(frm.uid).val();
@@ -31,7 +33,13 @@
 					}else if(data==2){
 						alert("비밀번호가 일치하지 않습니다.");
 					}else{
-						location.href="/";
+						alert("로그인 성공");
+						if(target==""){
+							location.href="/";	
+						}else{
+							location.href=target;
+						}
+						
 					}
 				}
 			})

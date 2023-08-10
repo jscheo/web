@@ -33,6 +33,8 @@ public class UserController extends HttpServlet {
 		HttpSession session=request.getSession();
 		switch(request.getServletPath()) {
 		case "/user/login":
+			String target= request.getParameter("target")==null? "" : request.getParameter("target");
+			session.setAttribute("target", target);
 			request.setAttribute("pageName", "/user/login.jsp");
 			dis.forward(request, response);
 			break;
